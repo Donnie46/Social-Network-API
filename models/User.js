@@ -14,10 +14,6 @@ const userSchema = new Schema(
       unique: true,
       match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, "does not match email:"]
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     thoughts: [
       {
         type: Schema.Types.ObjectId,
@@ -41,7 +37,7 @@ const userSchema = new Schema(
 
 userSchema
   .virtual('friendCount')
-  // Getter
+  // Getter method
   .get(function () {
     return `${this.friends.length}`;
   })

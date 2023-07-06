@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const dayjs = require('dayjs');
 const reactionSchema = require('./Reaction');
+const { Thought } = require('.');
 
 // Schema to create a course model
 const thoughtSchema = new Schema(
@@ -16,14 +17,9 @@ const thoughtSchema = new Schema(
       default: Date.now,
       get: (time) => dayjs(time).format("MM/DD/YYYY"),
     },
-    startDate: {
-      type: Date,
-      default: Date.now(),
-    },
-    endDate: {
-      type: Date,
-      // Sets a default value of 12 weeks from now
-      default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
+    username: {
+      type: String,
+      required: true,
     },
     reactions: [
       reactionSchema
@@ -37,6 +33,13 @@ const thoughtSchema = new Schema(
   }
 );
 
-const Course = model('course', courseSchema);
+thoughtSchema
+  .virtual('reactionCount')
+  // Getter method
+  .get(function () {
+    return `${this.reactions.length}`;
+  })
 
-module.exports = Course;
+const Thought = model('thought', thoughtSchema);
+
+module.exports = Thought;
